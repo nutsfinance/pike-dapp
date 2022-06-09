@@ -167,7 +167,7 @@ async function buildTranslations(mod, englishOnlyLangFile, translations, source,
 }
 
 async function saveTranslations(mod, translations, source, languages, outputFile) {
-  console.log("saveTranslations", translations, sourceLang, languages)
+  console.log("saveTranslations", translations, source, languages)
 
   const output = await buildTranslations(mod, translations, source, languages);
 
