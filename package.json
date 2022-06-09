@@ -80,9 +80,11 @@
     "elm-test": "0.19.1-revision2",
     "express": "^4.17.1",
     "google-translate": "^3.0.0",
-    "ipfs-http-client": "^52.0.1",
     "postcss-url": "^8.0.0",
     "puppeteer": "^9.1.1"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.3"
   },
   "resolutions": {
     "**/ethereumjs-wallet": "https://github.com/ethereumjs/ethereumjs-wallet.git#2121d5a32195e595accc9dce81d14bae8b4e6de6",

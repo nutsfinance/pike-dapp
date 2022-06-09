@@ -19,7 +19,6 @@ import Dict exposing (Dict)
 import Eth.Config exposing (Config)
 import Eth.Token exposing (CToken, Token, TokenState, getTokenAddress)
 import Json.Decode exposing (Value, decodeValue, field, float)
-import Debug exposing (log)
 
 
 type alias OracleState =

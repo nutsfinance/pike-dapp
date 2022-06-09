@@ -19,7 +19,6 @@ import CompoundComponents.Eth.Ethereum exposing (CustomerAddress(..), TrxHash)
 import CompoundComponents.Eth.Network exposing (Network, networkFromId)
 import Decimal exposing (Decimal)
 import Json.Decode exposing (Value)
-import Debug exposing (log)
 
 
 

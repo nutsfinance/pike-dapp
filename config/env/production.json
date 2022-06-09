@@ -1,33 +1,28 @@
 {
   "API_BASE_URL_MAP": {
-    "goerli": "https://api.compound.finance/api/",
-    "kovan": "https://api.compound.finance/api/",
-    "rinkeby": "https://api.compound.finance/api/",
-    "ropsten": "https://api.compound.finance/api/",
+    "development": "https://api.compound.finance/api/",
+    "goerli": "https://api.stage.compound.finance/api/",
+    "kovan": "https://api.stage.compound.finance/api/",
+    "rinkeby": "https://api.stage.compound.finance/api/",
+    "ropsten": "https://api.stage.compound.finance/api/",
     "mainnet": "https://api.compound.finance/api/"
   },
   "DATA_PROVIDERS": {
     "development": "http://localhost:8545",
-    "goerli": "https://goerli.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
+    "goerli": "https://speedy-nodes-nyc.moralis.io/595e032ef29eee61c739225a/eth/goerli",
     "rinkeby": "https://rinkeby.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
     "kovan": "https://kovan.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
     "ropsten": "https://ropsten.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
-    "mainnet": "https://speedy-nodes-nyc.moralis.io/595e032ef29eee61c739225a/eth/mainnet"
+    "mainnet": "https://tc7-eth.aca-dev.network"
   },
   "NETWORK_MAP": {
-    "mainnet": 1,
+    "mainnet": 595,
     "ropsten": 3,
     "rinkeby": 4,
     "goerli": 5,
-    "kovan": 42
+    "kovan": 42,
+    "development": 123
   },
   "DEFAULT_NETWORK": "mainnet",
   "BLOCKNATIVE_API_KEY": "86ca7540-ee00-4b6d-8ca8-45e6deb0d719"
 }
-
-
-
-
-
-
-curl https://speedy-nodes-nyc.moralis.io/595e032ef29eee61c739225a/eth/mainnet -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params": [],"id":1}'

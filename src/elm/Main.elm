@@ -52,7 +52,6 @@ import Tuple
 import Url
 import Utils.BrowserInfo
 import Utils.Http
-import Debug exposing (log)
 
 
 type Msg
@@ -360,7 +359,6 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
     case connectedEthWalletMsg of
         ConnectedEthWallet.SetNetwork (Just newNetwork) ->
             let
-                a = log "wogjrwe" newNetwork
                 maybeNewConfig =
                     getConfig model.configs newNetwork
 
@@ -589,7 +587,6 @@ update msg ({ page, configs, apiBaseUrlMap, account, transactionState, bnTransac
                     { model
                         | connectedEthWalletModel = updatedConnectedEthWalletModel
                     }
-                c = log "connectedEthWalletMsg" connectedEthWalletMsg
                 ( updatedModel, cmdsToRun ) =
                     handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg intermediateModel
             in
@@ -1136,7 +1133,6 @@ view model =
 viewFull : Model -> List (Html Msg)
 viewFull ({ page, liquidateModel, transactionState, compoundState, tokenState, oracleState, configs, configAbis, network, preferences, account, blockNumber, userLanguage } as model) =
     let
-        a = log "weikfhweo" model.network
         maybeConfig =
             getCurrentConfig model
 
@@ -1370,7 +1366,7 @@ testNetworkNoEtherAlert userLanguage network address =
 
 invalidNetwork : Maybe Network -> Dict String Config -> Bool
 invalidNetwork maybeNetwork configs =
-    case log "maybeNetwork" maybeNetwork of
+    case maybeNetwork of
         Just network ->
             case getConfig configs network of
                 Just _ ->

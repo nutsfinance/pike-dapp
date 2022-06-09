@@ -83,7 +83,7 @@ if (fs.existsSync(overrideNetworksPath)) {
     }
   });
 }
-
+console.log("appDirectory", appDirectory)
 const envPath = path.join(appDirectory, '/config/env');
 const envJson = fs.readFileSync(path.join(envPath, `${CONFIG_ENV}.json`));
 const envConfig = JSON.parse(envJson);

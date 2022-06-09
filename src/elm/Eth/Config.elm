@@ -6,7 +6,6 @@ import CompoundComponents.Functions as Functions
 import Dict exposing (Dict)
 import Json.Decode exposing (Decoder, Error, bool, decodeValue, field, int, string)
 import Json.Encode
-import Debug exposing (log)
 
 
 type alias BasicConfig =
@@ -253,7 +252,6 @@ loadConfig networkName ({ contracts, cTokensRaw, tokens, blocks } as basicConfig
                             )
                 )
                 cTokensRaw
-        a = log "cEtherTokenConfig" maybeCEtherTokenRaw
         ( cTokens, maybeCEtherToken ) =
             case maybeCEtherTokenRaw of
                 Just cEtherTokenConfig ->
@@ -283,8 +281,8 @@ loadConfig networkName ({ contracts, cTokensRaw, tokens, blocks } as basicConfig
                     ( cTokensWithoutCEth
                     , Nothing
                     )
-        b = log "maybeCEtherToken" maybeCEtherToken
-        c = log "cTokens" cTokens
+
+
 
     in
     Functions.map2
