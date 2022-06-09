@@ -71,14 +71,10 @@ function allMatches(regex, str) {
 }
 
 async function buildTranslations(mod, englishOnlyLangFile, translations, source, languages) {
-  console.log("saveTranslations", translations, source, languages)
-
   const allLanguages = [source].concat(languages);
-  console.log("allLanguages", allLanguages)
-  
+
   let langs = await Promise.all(allLanguages.map(async (language) => {
     const langFile = getLangFile(translations, language);
-    console.log("langFile", langFile)
     const values = await readAndParseLangFile(langFile);
 
     return {
@@ -167,8 +163,6 @@ async function buildTranslations(mod, englishOnlyLangFile, translations, source,
 }
 
 async function saveTranslations(mod, translations, source, languages, outputFile) {
-  console.log("saveTranslations", translations, source, languages)
-
   const output = await buildTranslations(mod, translations, source, languages);
 
   await writeFileAsync(outputFile, output);
