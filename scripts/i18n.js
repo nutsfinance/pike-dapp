@@ -11,6 +11,7 @@ const buildKey = "BUILD_I18N";
 
 module.exports = function buildI18n() {
   if (process.env[buildKey] || !fs.existsSync(txFile)) {
+    console.log("buildI18n", translationsPath, sourceLang, languages)
     return saveTranslations(moduleName, translationsPath, sourceLang, languages, elmFile);
   } else {
     return Promise.resolve(null);
