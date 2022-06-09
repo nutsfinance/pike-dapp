@@ -28,7 +28,7 @@ const buildI18n = require('./i18n');
 
 const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-
+console.log("start building")
 if (fs.existsSync('elm.json') === false) {
   console.log('Please, run the build script from project root directory');
   process.exit(1);
