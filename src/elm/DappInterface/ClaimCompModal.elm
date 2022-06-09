@@ -163,13 +163,13 @@ update internalMsg maybeConfig account compoundState model =
                                             Nothing
                                     )
 
-                        markets =
+                        markets = marketsWithBalances
                             -- Handle when a user has unclaimed COMP but no longer has any balances
-                            if List.length marketsWithBalances == 0 then
-                                [ getContractAddressString config.cEtherToken.address ]
+                            -- if List.length marketsWithBalances == 0 then
+                            --     [ getContractAddressString config.cEtherToken.address ]
 
-                            else
-                                marketsWithBalances
+                            -- else
+                                -- marketsWithBalances
                     in
                     ( { model
                         | step = AwaitingConfirmClaimTransaction

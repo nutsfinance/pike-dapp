@@ -6,13 +6,14 @@ import CompoundComponents.Functions as Functions
 import Dict exposing (Dict)
 import Json.Decode exposing (Decoder, Error, bool, decodeValue, field, int, string)
 import Json.Encode
+import Debug exposing (log)
 
 
 type alias BasicConfig =
     { contracts : Dict String ContractAddress
     , cTokensRaw : Dict String RawCTokenConfig
     , tokens : Dict String TokenConfig
-    , interestModels : Dict String InterestRateModelConfig
+    -- , interestModels : Dict String InterestRateModelConfig
     , blocks : Dict String Int
     }
 
@@ -57,11 +58,11 @@ type alias RawCTokenConfig =
 
 type alias Config =
     { comptroller : ContractAddress
-    , priceOracle : ContractAddress
-    , maximillion : ContractAddress
+    -- , priceOracle : ContractAddress
+    -- , maximillion : ContractAddress
     , compoundLens : ContractAddress
     , maybeFauceteer : Maybe ContractAddress
-    , cEtherToken : TokenConfig --TODO: This is likey a different config entirely since we don't have an underlying.
+    -- , cEtherToken : TokenConfig --TODO: This is likey a different config entirely since we don't have an underlying.
     , cTokens : Dict String CTokenConfig
     , maybeInvertedEtherPriceAsset : Maybe ContractAddress
     , maybeGovernor : Maybe ( ContractAddress, Bool )
@@ -99,11 +100,11 @@ basicConfigDecoder : Decoder (Dict String (Maybe BasicConfig))
 basicConfigDecoder =
     Json.Decode.dict <|
         Json.Decode.maybe
-            (Json.Decode.map5 BasicConfig
+            (Json.Decode.map4 BasicConfig
                 (field "Contracts" (Json.Decode.dict decodeContractAddress))
                 (field "cTokens" (Json.Decode.dict decodeRawCToken))
                 (field "Tokens" (Json.Decode.dict decodeToken))
-                (field "InterestRateModel" (Json.Decode.dict decodeInterestRateModel))
+                -- (field "InterestRateModel" (Json.Decode.dict decodeInterestRateModel))
                 (field "Blocks"
                     (Json.Decode.dict Json.Decode.int)
                 )
@@ -128,14 +129,14 @@ loadConfig networkName ({ contracts, cTokensRaw, tokens, blocks } as basicConfig
         maybeComptroller =
             Dict.get "Comptroller" contracts
 
-        maybePriceOracle =
-            Dict.get "PriceOracleProxy" contracts
+        -- maybePriceOracle =
+        --     Dict.get "PriceOracleProxy" contracts
 
         maybePriceFeed =
             Dict.get "PriceFeed" contracts
 
-        maybeMaximillion =
-            Dict.get "Maximillion" contracts
+        -- maybeMaximillion =
+        --     Dict.get "Maximillion" contracts
 
         maybeCEtherTokenRaw =
             Dict.get "cETH" cTokensRaw
@@ -252,7 +253,7 @@ loadConfig networkName ({ contracts, cTokensRaw, tokens, blocks } as basicConfig
                             )
                 )
                 cTokensRaw
-
+        a = log "cEtherTokenConfig" maybeCEtherTokenRaw
         ( cTokens, maybeCEtherToken ) =
             case maybeCEtherTokenRaw of
                 Just cEtherTokenConfig ->
@@ -282,20 +283,21 @@ loadConfig networkName ({ contracts, cTokensRaw, tokens, blocks } as basicConfig
                     ( cTokensWithoutCEth
                     , Nothing
                     )
+        b = log "maybeCEtherToken" maybeCEtherToken
+        c = log "cTokens" cTokens
+
     in
-    Functions.map5
+    Functions.map2
         maybeComptroller
-        maybePriceOracle
-        maybeCEtherToken
-        maybeMaximillion
+        -- maybePriceOracle
+        -- maybeMaximillion
         maybeCompoundLens
-        (\comptroller priceOracle cEtherToken maximillion compoundLens ->
+        (\comptroller compoundLens ->
             { comptroller = comptroller
-            , priceOracle = priceOracle
-            , maximillion = maximillion
+            -- , priceOracle = priceOracle
+            -- , maximillion = maximillion
             , compoundLens = compoundLens
             , maybeFauceteer = maybeFauceteer
-            , cEtherToken = cEtherToken
             , cTokens = cTokens
             , maybeInvertedEtherPriceAsset = maybeUSDCAssetAddress
             , maybeGovernor = maybeGovernor

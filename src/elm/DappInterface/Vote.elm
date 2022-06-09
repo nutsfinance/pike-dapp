@@ -1459,8 +1459,8 @@ votingWalletPanel userLanguage config network accountAddress maybeDelegateTransa
                             Decimal.gte balance_ crowdProposalThreshold
                     in
                     if showCreateProposalView then
-                        div []
-                            [ a (class "button main create-proposal-panel__button" :: href PageNavigation (getHrefUrl Propose)) [ text (Translations.create_proposal userLanguage) ] ]
+                        div [] []
+                            -- [ a (class "button main create-proposal-panel__button" :: href PageNavigation (getHrefUrl Propose)) [ text (Translations.create_proposal userLanguage) ] ]
 
                     else if showCreateCrowdProposalView then
                         let
@@ -1488,8 +1488,8 @@ votingWalletPanel userLanguage config network accountAddress maybeDelegateTransa
                                         disabled
                         in
                         if isCAPApproved then
-                            a (class "button main create-proposal-panel__button" :: href PageNavigation (getHrefUrl CrowdPropose)) [ text (Translations.create_autonomous_proposal userLanguage) ]
-
+                            -- a (class "button main create-proposal-panel__button" :: href PageNavigation (getHrefUrl CrowdPropose)) [ text (Translations.create_autonomous_proposal userLanguage) ]
+                            a (class "button main create-proposal-panel__button" :: [ enableClickOrDisabled ]) [ text (Translations.approve_proposal_creation userLanguage) ]
                         else
                             a (class "button main create-proposal-panel__button" :: [ enableClickOrDisabled ]) [ text (Translations.approve_proposal_creation userLanguage) ]
 

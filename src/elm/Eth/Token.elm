@@ -402,8 +402,8 @@ clearTokenState state =
 
 
 isCEtherToken : Config -> CToken -> Bool
-isCEtherToken config cToken =
-    config.cEtherToken.address == cToken.contractAddress
+isCEtherToken config cToken = False
+    -- config.cEtherToken.address == cToken.contractAddress
 
 
 isCAPFactoryApproved : Config -> TokenState -> Bool

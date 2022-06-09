@@ -154,7 +154,9 @@ pageHeader userLanguage page connectedWallet account preferences governanceState
                 [ accountButton ]
 
             else
-                [ compBalanceView account governanceState ]
+                [ 
+                    -- compBalanceView account governanceState 
+                ]
 
         links =
             let
@@ -169,14 +171,14 @@ pageHeader userLanguage page connectedWallet account preferences governanceState
                         Home ->
                             { emptyClasses | homeClass = "active" }
 
-                        Vote ->
-                            { emptyClasses | voteClass = "active" }
+                        -- Vote ->
+                        --     { emptyClasses | voteClass = "active" }
 
-                        _ ->
-                            emptyClasses
+                        -- _ ->
+                        --     emptyClasses
             in
             [ a (class homeClass :: href PageNavigation (getHrefUrl Home)) [ text (Translations.dashboard userLanguage) ]
-            , a (class voteClass :: href PageNavigation (getHrefUrl Vote)) [ text (Translations.vote userLanguage) ]
+            -- , a (class voteClass :: href PageNavigation (getHrefUrl Vote)) [ text (Translations.vote userLanguage) ]
             ]
     in
     header [ class "dapp" ]
@@ -187,8 +189,10 @@ pageHeader userLanguage page connectedWallet account preferences governanceState
                     ]
                 , div [ class "col-xs-6 mobile-hide text-center links" ] links
                 , div [ class "col-xs-9 col-sm-3 text-right actions" ]
-                    [ compBalanceView account governanceState
-                    , accountButton
+                    [ 
+                        -- compBalanceView account governanceState
+                        -- , 
+                        accountButton
                     ]
                 , div [ class "col-xs-9 mobile-links actions" ] mobileLinks
                 ]
@@ -207,65 +211,66 @@ pageFooter userLanguage maybeBlockNumber preferences model =
                 Nothing ->
                     " red"
     in
-    footer [ class "dapp" ]
-        [ div [ class "container-large" ]
-            [ div [ class "row top" ]
-                [ div [ class "col-xs-12 col-sm-2" ]
-                    [ a ([ class "brand" ] |> List.append (href PageNavigation "/")) [] ]
-                , div [ class "col-xs-12 col-sm-10 links" ]
-                    [ a (target "_blank" :: href External "https://compound.finance/markets") [ text (Translations.markets userLanguage) ]
-                    , a (target "_blank" :: href External "https://compound.finance/governance") [ text (Translations.governance userLanguage) ]
-                    , a (target "_blank" :: href External "https://compound.finance/governance/comp") [ text (Translations.comp userLanguage) ]
-                    , a (href PageNavigation (getHrefUrl TermsOfService)) [ text (Translations.terms userLanguage) ]
-                    , a (target "_blank" :: href External "https://medium.com/compound-finance/the-compound-guide-to-supplying-borrowing-crypto-assets-94821f2950a0") [ text (Translations.support userLanguage) ]
-                    ]
-                ]
-            , div [ class "bottom" ]
-                [ div [ class "help" ]
-                    [ div [ class "mobile-hide" ]
-                        [ span [ class ("dot-indicator" ++ indicatorColorClass) ] []
-                        , label [ class "small" ] [ text (Translations.latest_block userLanguage (formatBlockNumber maybeBlockNumber)) ]
-                        , a (target "_blank" :: href External "https://compound.finance/markets") [ text (Translations.markets userLanguage) ]
-                        , a (target "_blank" :: href External "https://compound.finance/governance") [ text (Translations.governance userLanguage) ]
-                        , a (target "_blank" :: href External "https://compound.finance/governance/comp") [ text (Translations.comp userLanguage) ]
-                        , a (target "_blank" :: href External "https://medium.com/compound-finance/the-compound-guide-to-supplying-borrowing-crypto-assets-94821f2950a0") [ text (Translations.support userLanguage) ]
-                        , a (href PageNavigation (getHrefUrl TermsOfService)) [ text (Translations.terms userLanguage) ]
-                        ]
-                    ]
-                , div [ class "social" ]
-                    [ currencySelectorButton preferences.displayCurrency model
-                    , languageSelectorView userLanguage model
-                    ]
-                ]
-            ]
-        ]
+    footer [ class "dapp" ] []
+        -- [ div [ class "container-large" ]
+        --     [ div [ class "row top" ]
+        --         [ 
+        --             div [ class "col-xs-12 col-sm-2" ]
+        --             [ a ([ class "brand" ] |> List.append (href PageNavigation "/")) [] ]
+        --         , div [ class "col-xs-12 col-sm-10 links" ]
+        --             [ a (target "_blank" :: href External "https://compound.finance/markets") [ text (Translations.markets userLanguage) ]
+        --             , a (target "_blank" :: href External "https://compound.finance/governance") [ text (Translations.governance userLanguage) ]
+        --             , a (target "_blank" :: href External "https://compound.finance/governance/comp") [ text (Translations.comp userLanguage) ]
+        --             , a (href PageNavigation (getHrefUrl TermsOfService)) [ text (Translations.terms userLanguage) ]
+        --             , a (target "_blank" :: href External "https://medium.com/compound-finance/the-compound-guide-to-supplying-borrowing-crypto-assets-94821f2950a0") [ text (Translations.support userLanguage) ]
+        --             ]
+        --         ]
+        --     , div [ class "bottom" ]
+        --         [ div [ class "help" ]
+        --             [ div [ class "mobile-hide" ]
+        --                 [ span [ class ("dot-indicator" ++ indicatorColorClass) ] []
+        --                 , label [ class "small" ] [ text (Translations.latest_block userLanguage (formatBlockNumber maybeBlockNumber)) ]
+        --                 , a (target "_blank" :: href External "https://compound.finance/markets") [ text (Translations.markets userLanguage) ]
+        --                 , a (target "_blank" :: href External "https://compound.finance/governance") [ text (Translations.governance userLanguage) ]
+        --                 , a (target "_blank" :: href External "https://compound.finance/governance/comp") [ text (Translations.comp userLanguage) ]
+        --                 , a (target "_blank" :: href External "https://medium.com/compound-finance/the-compound-guide-to-supplying-borrowing-crypto-assets-94821f2950a0") [ text (Translations.support userLanguage) ]
+        --                 , a (href PageNavigation (getHrefUrl TermsOfService)) [ text (Translations.terms userLanguage) ]
+        --                 ]
+        --             ]
+        --         , div [ class "social" ]
+        --             [ currencySelectorButton preferences.displayCurrency model
+        --             , languageSelectorView userLanguage model
+        --             ]
+        --         ]
+        --     ]
+        -- ]
 
 
-compBalanceView : Account -> GovernanceState -> Html Msg
-compBalanceView account governanceState =
-    let
-        balanceView value attrs =
-            div (class "comp-balance" :: attrs)
-                [ text value
-                , div [ class "icon icon--COMP" ] []
-                ]
-    in
-    case account of
-        Acct customer _ ->
-            case ( getCompoundGovernanceTokenBalance customer governanceState, getCompAccruedBalance customer governanceState ) of
-                ( Just balance, Just accrued ) ->
-                    let
-                        total =
-                            Decimal.add balance accrued
-                                |> formatToDecimalPlaces 4 False
-                    in
-                    balanceView total [ onClick (ForParent CompButtonClicked) ]
+-- compBalanceView : Account -> GovernanceState -> Html Msg
+-- compBalanceView account governanceState =
+--     let
+--         balanceView value attrs =
+--             div (class "comp-balance" :: attrs)
+--                 [ text value
+--                 , div [ class "icon icon--COMP" ] []
+--                 ]
+--     in
+--     case account of
+--         Acct customer _ ->
+--             case ( getCompoundGovernanceTokenBalance customer governanceState, getCompAccruedBalance customer governanceState ) of
+--                 ( Just balance, Just accrued ) ->
+--                     let
+--                         total =
+--                             Decimal.add balance accrued
+--                                 |> formatToDecimalPlaces 4 False
+--                     in
+--                     balanceView total [ onClick (ForParent CompButtonClicked) ]
 
-                _ ->
-                    balanceView "—" []
+--                 _ ->
+--                     balanceView "—" []
 
-        _ ->
-            text ""
+--         _ ->
+--             text ""
 
 
 getCurrencyTextAndMsg : DisplayCurrency -> ( String, Msg )

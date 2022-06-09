@@ -14,7 +14,7 @@ import CompoundComponents.Eth.Ethereum as Ethereum exposing (Account(..), AssetA
 import CompoundComponents.Eth.Ledger exposing (LedgerAccount(..))
 import CompoundComponents.Eth.Network as Network exposing (Network(..), networkId, networkName)
 import CompoundComponents.Ether.BNTransaction as BNTransaction exposing (BNTransactionMsg)
-import CompoundComponents.Ether.Helpers
+-- import CompoundComponents.Ether.Helpers
 import CompoundComponents.Functions exposing (handleError)
 import CompoundComponents.Utils.CompoundHtmlAttributes exposing (HrefLinkType(..), class, href, id, target)
 import CompoundComponents.Utils.Time
@@ -26,7 +26,7 @@ import DappInterface.MainModel exposing (ChooseWalletModalState(..), Model, Prim
 import DappInterface.Page exposing (Page(..), getPage, getPageTitle)
 import DappInterface.PrimaryActionModal
 import DappInterface.Propose as Propose
-import DappInterface.Terms as DappTerms
+-- import DappInterface.Terms as DappTerms
 import DappInterface.Vote as Vote
 import Decimal exposing (Decimal)
 import Dict exposing (Dict)
@@ -52,6 +52,7 @@ import Tuple
 import Url
 import Utils.BrowserInfo
 import Utils.Http
+import Debug exposing (log)
 
 
 type Msg
@@ -322,13 +323,13 @@ newBlockCmd apiBaseUrlMap maybeNetwork blockNumber previousBlockNumber ({ dataPr
                                     [ Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
                                     ]
 
-                                Vote ->
-                                    [ Vote.getVoteDashboardData configs (Just network) (Just blockNumber) model.account
-                                    , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
-                                    ]
+                                -- Vote ->
+                                --     [ Vote.getVoteDashboardData configs (Just network) (Just blockNumber) model.account
+                                --     , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
+                                --     ]
 
-                                _ ->
-                                    []
+                                -- _ ->
+                                --     []
 
                         compAllowanceCmd =
                             case ( config.maybeCompToken, config.maybeCrowdProposalFactory, model.account ) of
@@ -341,9 +342,9 @@ newBlockCmd apiBaseUrlMap maybeNetwork blockNumber previousBlockNumber ({ dataPr
                     Cmd.batch <|
                         pageCmds
                             ++ [ Cmd.map WrappedTransactionMsg (Transaction.newBlockCmd blockNumber network model.transactionState)
-                               , Cmd.map WrappedTokenMsg (tokenNewBlockCmd config model.tokenState blockNumber model.account)
+                            --    , Cmd.map WrappedTokenMsg (tokenNewBlockCmd config model.tokenState blockNumber model.account)
                                , Cmd.map WrappedCompoundMsg (compoundNewBlockCmd blockNumber apiBaseUrlMap network config.comptroller model.account config)
-                               , Cmd.map WrappedOracleMsg (oracleNewBlockCmd model.oracleState blockNumber config.priceOracle model.tokenState config.compoundLens)
+                               , Cmd.map WrappedOracleMsg (oracleNewBlockCmd model.oracleState blockNumber model.tokenState config.compoundLens)
                                , compAllowanceCmd
                                ]
 
@@ -359,6 +360,7 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
     case connectedEthWalletMsg of
         ConnectedEthWallet.SetNetwork (Just newNetwork) ->
             let
+                a = log "wogjrwe" newNetwork
                 maybeNewConfig =
                     getConfig model.configs newNetwork
 
@@ -373,7 +375,8 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
                 ( newLiquidateModel, newLiquidateCmd ) =
                     case maybeNewConfig of
                         Just config ->
-                            Liquidate.init (model.page == Liquidate) config model.account model.blockNumber model.apiBaseUrlMap newNetwork
+                            -- Liquidate.init (model.page == Liquidate) config model.account model.blockNumber model.apiBaseUrlMap newNetwork
+                            Liquidate.init (False) config model.account model.blockNumber model.apiBaseUrlMap newNetwork
 
                         Nothing ->
                             ( Liquidate.emptyState, Cmd.none )
@@ -394,7 +397,7 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
                     Cmd.batch
                         ([ setBlockNativeCmd
                          , refreshLatestGasPrice model.apiBaseUrlMap newNetwork
-                         , Cmd.map WrappedTokenMsg newTokenCmd
+                        --  , Cmd.map WrappedTokenMsg newTokenCmd
                          , Cmd.map liquidateTranslator newLiquidateCmd
                          ]
                             ++ (case model.blockNumber of
@@ -458,22 +461,22 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
                                 _ ->
                                     Cmd.none
 
-                        Vote ->
-                            case ( maybeConfig, model.blockNumber ) of
-                                ( Just config, Just blockNumber ) ->
-                                    Cmd.batch
-                                        [ Vote.getVoteDashboardData model.configs model.network (Just blockNumber) model.account
-                                        , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
-                                        ]
+                        -- Vote ->
+                        --     case ( maybeConfig, model.blockNumber ) of
+                        --         ( Just config, Just blockNumber ) ->
+                        --             Cmd.batch
+                        --                 [ Vote.getVoteDashboardData model.configs model.network (Just blockNumber) model.account
+                        --                 , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
+                        --                 ]
 
-                                _ ->
-                                    Cmd.none
+                        --         _ ->
+                        --             Cmd.none
 
-                        Admin ->
-                            Admin.getQueuedTransactions model.configs model.network
+                        -- Admin ->
+                        --     Admin.getQueuedTransactions model.configs model.network
 
-                        _ ->
-                            Cmd.none
+                        -- _ ->
+                        --     Cmd.none
 
                 updatedBorrowingContainerState =
                     if isAccountSwitch then
@@ -518,17 +521,17 @@ handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg model =
             , Cmd.none
             )
 
-        ConnectedEthWallet.RequestShowTerms ->
-            let
-                updatedConnectedEthWalletModel =
-                    ConnectedEthWallet.resetModel model.connectedEthWalletModel
-            in
-            ( { model
-                | connectedEthWalletModel = updatedConnectedEthWalletModel
-                , page = TermsOfService
-              }
-            , Cmd.none
-            )
+        -- ConnectedEthWallet.RequestShowTerms ->
+        --     let
+        --         updatedConnectedEthWalletModel =
+        --             ConnectedEthWallet.resetModel model.connectedEthWalletModel
+        --     in
+        --     ( { model
+        --         | connectedEthWalletModel = updatedConnectedEthWalletModel
+        --         , page = TermsOfService
+        --       }
+        --     , Cmd.none
+        --     )
 
         _ ->
             ( model, Cmd.none )
@@ -552,19 +555,19 @@ update msg ({ page, configs, apiBaseUrlMap, account, transactionState, bnTransac
                 newPageCmds =
                     [ setTitle (getPageTitle model.userLanguage newPage)
                     , case newPage of
-                        Admin ->
-                            Admin.getQueuedTransactions configs network
+                        -- Admin ->
+                        --     Admin.getQueuedTransactions configs network
 
-                        Vote ->
-                            case ( maybeConfig, model.blockNumber ) of
-                                ( Just config, Just blockNumber ) ->
-                                    Cmd.batch
-                                        [ Vote.getVoteDashboardData configs network model.blockNumber account
-                                        , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
-                                        ]
+                        -- Vote ->
+                        --     case ( maybeConfig, model.blockNumber ) of
+                        --         ( Just config, Just blockNumber ) ->
+                        --             Cmd.batch
+                        --                 [ Vote.getVoteDashboardData configs network model.blockNumber account
+                        --                 , Cmd.map WrappedGovernanceMsg (Eth.Governance.newBlockCmd config blockNumber model.account Nothing)
+                        --                 ]
 
-                                _ ->
-                                    Vote.getVoteDashboardData configs network model.blockNumber account
+                        --         _ ->
+                        --             Vote.getVoteDashboardData configs network model.blockNumber account
 
                         _ ->
                             Cmd.none
@@ -586,7 +589,7 @@ update msg ({ page, configs, apiBaseUrlMap, account, transactionState, bnTransac
                     { model
                         | connectedEthWalletModel = updatedConnectedEthWalletModel
                     }
-
+                c = log "connectedEthWalletMsg" connectedEthWalletMsg
                 ( updatedModel, cmdsToRun ) =
                     handleUpdatesFromEthConnectedWallet maybeConfig connectedEthWalletMsg intermediateModel
             in
@@ -694,10 +697,10 @@ update msg ({ page, configs, apiBaseUrlMap, account, transactionState, bnTransac
         HideAndResetConnectModal loadTerms ->
             let
                 newPage =
-                    if loadTerms then
-                        TermsOfService
+                    -- if loadTerms then
+                    --     TermsOfService
 
-                    else
+                    -- else
                         page
 
                 updatedConnectedEthWalletModel =
@@ -1133,6 +1136,7 @@ view model =
 viewFull : Model -> List (Html Msg)
 viewFull ({ page, liquidateModel, transactionState, compoundState, tokenState, oracleState, configs, configAbis, network, preferences, account, blockNumber, userLanguage } as model) =
     let
+        a = log "weikfhweo" model.network
         maybeConfig =
             getCurrentConfig model
 
@@ -1149,24 +1153,24 @@ viewFull ({ page, liquidateModel, transactionState, compoundState, tokenState, o
             Html.map claimCompModalTranslator (ClaimCompModal.view userLanguage maybeConfig network account tokenState oracleState transactionState model.governanceState preferences model.claimCompModalState)
     in
     case page of
-        Liquidate ->
-            [ header
-            , Html.map liquidateTranslator (Liquidate.view userLanguage model.currentTimeZone maybeConfig network account compoundState tokenState oracleState preferences transactionState liquidateModel)
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , footer
-            , replFooter
-            ]
+        -- Liquidate ->
+        --     [ header
+        --     , Html.map liquidateTranslator (Liquidate.view userLanguage model.currentTimeZone maybeConfig network account compoundState tokenState oracleState preferences transactionState liquidateModel)
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , footer
+        --     , replFooter
+        --     ]
 
-        Admin ->
-            [ alertView model
-            , header
-            , Html.map adminTranslator (Admin.view userLanguage configs configAbis account network model.currentTimeZone model.currentTime model.adminModel)
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , footer
-            , replFooter
-            ]
+        -- Admin ->
+        --     [ alertView model
+        --     , header
+        --     , Html.map adminTranslator (Admin.view userLanguage configs configAbis account network model.currentTimeZone model.currentTime model.adminModel)
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , footer
+        --     , replFooter
+        --     ]
 
         Home ->
             [ div [ id "borrow-interface-root" ]
@@ -1175,51 +1179,51 @@ viewFull ({ page, liquidateModel, transactionState, compoundState, tokenState, o
                 , Html.map containerTranslator (DappInterface.Container.view model)
                 , chooseWalletModal userLanguage model
                 , claimCompView
-                , footer
+                -- , footer
                 , Html.map collateralToggleModalTranslator (CollateralToggleModal.view model)
                 , Html.map primaryActionModalTranslator (DappInterface.PrimaryActionModal.view model)
                 , replFooter
                 ]
             ]
 
-        Propose ->
-            [ alertView model
-            , header
-            , Html.map proposeTranslator (Propose.view userLanguage False configs configAbis account network model.proposeModel)
-            , footer
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , replFooter
-            ]
+        -- Propose ->
+        --     [ alertView model
+        --     , header
+        --     , Html.map proposeTranslator (Propose.view userLanguage False configs configAbis account network model.proposeModel)
+        --     , footer
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , replFooter
+        --     ]
 
-        CrowdPropose ->
-            [ alertView model
-            , header
-            , Html.map proposeTranslator (Propose.view userLanguage True configs configAbis account network model.proposeModel)
-            , footer
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , replFooter
-            ]
+        -- CrowdPropose ->
+        --     [ alertView model
+        --     , header
+        --     , Html.map proposeTranslator (Propose.view userLanguage True configs configAbis account network model.proposeModel)
+        --     , footer
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , replFooter
+        --     ]
 
-        TermsOfService ->
-            [ header
-            , DappTerms.view userLanguage
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , footer
-            , replFooter
-            ]
+        -- TermsOfService ->
+        --     [ header
+        --     , DappTerms.view userLanguage
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , footer
+        --     , replFooter
+        --     ]
 
-        Vote ->
-            [ alertView model
-            , header
-            , Html.map voteTranslator (Vote.view userLanguage maybeConfig network model.currentTimeZone model.currentTime account model.transactionState model.governanceState model.tokenState model.voteModel)
-            , footer
-            , chooseWalletModal userLanguage model
-            , claimCompView
-            , replFooter
-            ]
+        -- Vote ->
+        --     [ alertView model
+        --     , header
+        --     , Html.map voteTranslator (Vote.view userLanguage maybeConfig network model.currentTimeZone model.currentTime account model.transactionState model.governanceState model.tokenState model.voteModel)
+        --     , footer
+        --     , chooseWalletModal userLanguage model
+        --     , claimCompView
+        --     , replFooter
+        --     ]
 
 
 alertView : Model -> Html Msg
@@ -1366,7 +1370,7 @@ testNetworkNoEtherAlert userLanguage network address =
 
 invalidNetwork : Maybe Network -> Dict String Config -> Bool
 invalidNetwork maybeNetwork configs =
-    case maybeNetwork of
+    case log "maybeNetwork" maybeNetwork of
         Just network ->
             case getConfig configs network of
                 Just _ ->

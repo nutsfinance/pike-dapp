@@ -689,8 +689,8 @@ filteredTransactionsByCToken transactions config network customerAddress cTokens
                             underlyingAddress =
                                 Ethereum.assetAddressToContractAddress selectedToken.underlying.assetAddress
 
-                            isCEther =
-                                selectedToken.contractAddress == config.cEtherToken.address
+                            isCEther = False
+                                -- selectedToken.contractAddress == config.cEtherToken.address
 
                             cTokenAddressString =
                                 Ethereum.getContractAddressString selectedToken.contractAddress
@@ -705,7 +705,7 @@ filteredTransactionsByCToken transactions config network customerAddress cTokens
                         in
                         (transaction.contract == selectedToken.contractAddress)
                             || (transaction.contract == underlyingAddress)
-                            || (isCEther && transaction.contract == config.maximillion)
+                            -- || (isCEther && transaction.contract == config.maximillion)
                             || (transaction.function == "exitMarket" && [ cTokenAddressString ] == transaction.args)
                             || (transaction.function == "enterMarkets" && [ cTokenAddressString ] == transaction.args)
                             || isFaucetingTrx

@@ -19,6 +19,7 @@ import Dict exposing (Dict)
 import Eth.Config exposing (Config)
 import Eth.Token exposing (CToken, Token, TokenState, getTokenAddress)
 import Json.Decode exposing (Value, decodeValue, field, float)
+import Debug exposing (log)
 
 
 type alias OracleState =
@@ -65,13 +66,13 @@ oracleUpdate maybeConfig tokenState msg state =
                 stateWithUpdatePrices =
                     { state | prices = updatedPrices }
 
-                etherAddress =
-                    maybeConfig
-                        |> Maybe.map
-                            (\config ->
-                                Ethereum.getContractAddressString config.cEtherToken.address
-                            )
-                        |> Maybe.withDefault "NADA-ADDRESS"
+                etherAddress = "NADA-ADDRESS"
+                    -- maybeConfig
+                    --     |> Maybe.map
+                    --         (\config ->
+                    --             Ethereum.getContractAddressString config.cEtherToken.address
+                    --         )
+                    --     |> Maybe.withDefault "NADA-ADDRESS"
 
                 maybeEtherUsdPrice =
                     maybeConfig
@@ -230,15 +231,15 @@ oracleSubscriptions state =
         [ giveAllOraclePrices (Functions.handleError (Json.Decode.errorToString >> Error) SetOraclePrices) ]
 
 
-oracleNewBlockCmd : OracleState -> Int -> ContractAddress -> TokenState -> ContractAddress -> Cmd OracleMsg
-oracleNewBlockCmd state blockNumber priceOracle tokenState compoundLens =
+oracleNewBlockCmd : OracleState -> Int -> TokenState -> ContractAddress -> Cmd OracleMsg
+oracleNewBlockCmd state blockNumber tokenState compoundLens =
     Cmd.batch
-        [ askTokenOraclePrices blockNumber priceOracle compoundLens (Dict.values tokenState.cTokens)
+        [ askTokenOraclePrices blockNumber compoundLens (Dict.values tokenState.cTokens)
         ]
 
 
-askTokenOraclePrices : Int -> ContractAddress -> ContractAddress -> List CToken -> Cmd OracleMsg
-askTokenOraclePrices blockNumber priceOracleAddress compoundLens cTokens =
+askTokenOraclePrices : Int -> ContractAddress -> List CToken -> Cmd OracleMsg
+askTokenOraclePrices blockNumber compoundLens cTokens =
     cTokens
         |> List.map (\cToken -> ( cToken.contractAddress, cToken.underlying.assetAddress ))
         |> askOraclePricesAll blockNumber compoundLens

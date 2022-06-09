@@ -225,7 +225,7 @@ governanceHelperDataFromConfig maybeConfig =
                 contractAddressToName =
                     Dict.fromList
                         ([ ( getContractAddressString config.comptroller, "Comptroller" )
-                         , ( getContractAddressString config.priceOracle, "PriceOracle" )
+                        --  , ( getContractAddressString config.priceOracle, "PriceOracle" )
                          ]
                             ++ (config.cTokens
                                     |> Dict.toList

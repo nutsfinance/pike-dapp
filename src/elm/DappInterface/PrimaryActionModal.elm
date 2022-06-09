@@ -1165,24 +1165,24 @@ faucetAllocateButton : Config -> Model -> CToken -> Html Msg
 faucetAllocateButton config { account, network, userLanguage } chosenAsset =
     case ( network, account, config.maybeFauceteer ) of
         ( Just actualNetwork, Acct customerAddress _, Just fauceteerAddress ) ->
-            if config.cEtherToken.address /= chosenAsset.contractAddress && actualNetwork /= Network.MainNet then
-                a [ class "faucet-link", onClick <| WrappedTokenMsg <| Eth.Token.Web3TransactionMsg (Eth.Token.FauceteerDrip actualNetwork fauceteerAddress chosenAsset.contractAddress chosenAsset.underlying.assetAddress customerAddress) ]
-                    [ text (Translations.faucet userLanguage) ]
+            -- if config.cEtherToken.address /= chosenAsset.contractAddress && actualNetwork /= Network.MainNet then
+            --     a [ class "faucet-link", onClick <| WrappedTokenMsg <| Eth.Token.Web3TransactionMsg (Eth.Token.FauceteerDrip actualNetwork fauceteerAddress chosenAsset.contractAddress chosenAsset.underlying.assetAddress customerAddress) ]
+            --         [ text (Translations.faucet userLanguage) ]
 
-            else
-                text ""
+            -- else
+            text ""
 
         ( Just actualNetwork, Acct customerAddress _, Nothing ) ->
-            if
-                (config.cEtherToken.address /= chosenAsset.contractAddress && actualNetwork /= Network.MainNet)
-                    && not (actualNetwork == Network.Kovan && (chosenAsset.symbol == "cSAI" || chosenAsset.symbol == "cDAI"))
-                    && not (actualNetwork == Network.Ropsten && (chosenAsset.symbol == "cTBTC" || chosenAsset.symbol == "cUSDT"))
-            then
-                a [ class "faucet-link", onClick <| WrappedTokenMsg <| Eth.Token.Web3TransactionMsg (Eth.Token.FaucetTokenAllocate actualNetwork chosenAsset.contractAddress chosenAsset.underlying.assetAddress customerAddress chosenAsset.underlying.decimals) ]
-                    [ text (Translations.faucet userLanguage) ]
+            -- if
+            --     (config.cEtherToken.address /= chosenAsset.contractAddress && actualNetwork /= Network.MainNet)
+            --         && not (actualNetwork == Network.Kovan && (chosenAsset.symbol == "cSAI" || chosenAsset.symbol == "cDAI"))
+            --         && not (actualNetwork == Network.Ropsten && (chosenAsset.symbol == "cTBTC" || chosenAsset.symbol == "cUSDT"))
+            -- then
+            --     a [ class "faucet-link", onClick <| WrappedTokenMsg <| Eth.Token.Web3TransactionMsg (Eth.Token.FaucetTokenAllocate actualNetwork chosenAsset.contractAddress chosenAsset.underlying.assetAddress customerAddress chosenAsset.underlying.decimals) ]
+            --         [ text (Translations.faucet userLanguage) ]
 
-            else
-                text ""
+            -- else
+            text ""
 
         _ ->
             text ""

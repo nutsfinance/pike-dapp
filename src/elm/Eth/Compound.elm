@@ -36,7 +36,7 @@ import Eth.Oracle exposing (OracleState)
 import Eth.Token exposing (CToken, TokenState, isCEtherToken)
 import Ether.Contracts.CToken as CTokenContract
 import Ether.Contracts.Comptroller as ComptrollerContract
-import Ether.Contracts.Maximillion as MaximillionContract
+-- import Ether.Contracts.Maximillion as MaximillionContract
 import Http
 import Json.Decode exposing (Value, bool, decodeValue, field, int)
 import Utils.Http
@@ -474,61 +474,61 @@ compoundTransactionUpdate config { cTokens } transactionMsg ( state, bnState ) =
                     ( bnState, Console.log "Unable to create underlying wei value for CToken.borrow" )
 
         CTokenRepayBorrow network cTokenAddress underlyingTokenDecimals customerAddress underlyingAmount ->
-            if cTokenAddress == config.cEtherToken.address then
-                let
-                    cEtherRepayAmount =
-                        if Decimal.eq underlyingAmount Decimal.minusOne then
-                            let
-                                borrowBalance =
-                                    state.balances
-                                        |> Dict.get (getContractAddressString cTokenAddress)
-                                        |> Maybe.map .underlyingBorrowBalance
-                                        |> Maybe.withDefault Decimal.zero
+            -- if cTokenAddress == config.cEtherToken.address then
+            --     let
+            --         cEtherRepayAmount =
+            --             if Decimal.eq underlyingAmount Decimal.minusOne then
+            --                 let
+            --                     borrowBalance =
+            --                         state.balances
+            --                             |> Dict.get (getContractAddressString cTokenAddress)
+            --                             |> Maybe.map .underlyingBorrowBalance
+            --                             |> Maybe.withDefault Decimal.zero
 
-                                tinyAdjustment =
-                                    Decimal.fromString "0.0035"
-                                        |> Maybe.withDefault Decimal.zero
-                                        |> Decimal.mul borrowBalance
+            --                     tinyAdjustment =
+            --                         Decimal.fromString "0.0035"
+            --                             |> Maybe.withDefault Decimal.zero
+            --                             |> Decimal.mul borrowBalance
 
-                                -- We'll pass in max as BorrowBalance + BorrowBalance * (0.0035)
-                                adjustedAmount =
-                                    Decimal.add borrowBalance tinyAdjustment
-                            in
-                            adjustedAmount
+            --                     -- We'll pass in max as BorrowBalance + BorrowBalance * (0.0035)
+            --                     adjustedAmount =
+            --                         Decimal.add borrowBalance tinyAdjustment
+            --                 in
+            --                 adjustedAmount
 
-                        else
-                            underlyingAmount
+            --             else
+            --                 underlyingAmount
 
-                    maybeRepayUnderlyingAmountWei =
-                        TokenMath.getTokenWei cEtherRepayAmount underlyingTokenDecimals
+            --         maybeRepayUnderlyingAmountWei =
+            --             TokenMath.getTokenWei cEtherRepayAmount underlyingTokenDecimals
+            --                 |> Decimal.toString
+            --                 |> BigInt.fromString
+            --     in
+            --     case maybeRepayUnderlyingAmountWei of
+            --         Just repayUnderlyingAmountWei ->
+            --             MaximillionContract.repayBehalf config network customerAddress cTokenAddress repayUnderlyingAmountWei bnState
+
+            --         Nothing ->
+            --             ( bnState, Console.log "Unable to create underlying wei value for CToken.repayBorrow" )
+
+            -- else
+            let
+                maybeUnderlyingAmountWei =
+                    if Decimal.eq underlyingAmount Decimal.minusOne then
+                        EtherHelpers.negativeOne
+                            |> Just
+
+                    else
+                        TokenMath.getTokenWei underlyingAmount underlyingTokenDecimals
                             |> Decimal.toString
                             |> BigInt.fromString
-                in
-                case maybeRepayUnderlyingAmountWei of
-                    Just repayUnderlyingAmountWei ->
-                        MaximillionContract.repayBehalf config network customerAddress cTokenAddress repayUnderlyingAmountWei bnState
+            in
+            case maybeUnderlyingAmountWei of
+                Just underlyingAmountWei ->
+                    CTokenContract.repayBorrow config network customerAddress cTokenAddress underlyingAmountWei bnState
 
-                    Nothing ->
-                        ( bnState, Console.log "Unable to create underlying wei value for CToken.repayBorrow" )
-
-            else
-                let
-                    maybeUnderlyingAmountWei =
-                        if Decimal.eq underlyingAmount Decimal.minusOne then
-                            EtherHelpers.negativeOne
-                                |> Just
-
-                        else
-                            TokenMath.getTokenWei underlyingAmount underlyingTokenDecimals
-                                |> Decimal.toString
-                                |> BigInt.fromString
-                in
-                case maybeUnderlyingAmountWei of
-                    Just underlyingAmountWei ->
-                        CTokenContract.repayBorrow config network customerAddress cTokenAddress underlyingAmountWei bnState
-
-                    Nothing ->
-                        ( bnState, Console.log "Unable to create underlying wei value for CToken.repayBorrow" )
+                Nothing ->
+                    ( bnState, Console.log "Unable to create underlying wei value for CToken.repayBorrow" )
 
         EnterMarkets network comptrollerAddress cTokenAddressList customerAddress ->
             ComptrollerContract.enterMarkets config network customerAddress comptrollerAddress cTokenAddressList bnState

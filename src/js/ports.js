@@ -389,6 +389,7 @@ function subscribeToComptrollerPorts(app, eth) {
 
     wrapCall(app, eth, [[CompoundLens, compoundLens, 'cTokenUnderlyingPriceAll', [Object.keys(cTokens)]]], blockNumber)
       .then(([results]) => {
+        console.log("wfiouhuo32huh023", results)
         const allPricesList = results.map(([cTokenAddress, underlyingPrice]) => {
           let underlyingAssetAddress = cTokens[cTokenAddress.toLowerCase()];
 
@@ -397,6 +398,7 @@ function subscribeToComptrollerPorts(app, eth) {
             value: toScaledDecimal(underlyingPrice, EXP_DECIMALS)
           };
         });
+        console.log("allpricelist", allPricesList)
 
         app.ports.giveOraclePricesAllPort.send(allPricesList);
       })
@@ -1646,6 +1648,7 @@ function subscribe(
   blockNativeApiKeyInput
 ) {
   const eth = makeEth(dataProviders, networkMap, networkAbiMap, configNameToAddressMappings, defaultNetwork);
+  console.log("eth.networkIdMap", eth.networkIdMap, defaultNetwork)
   connectedWalletPorts.subscribe(app, eth, globEthereum, networkMap, defaultNetwork);
 
   subscribeToConsole(app);
@@ -1657,10 +1660,10 @@ function subscribe(
   subscribeToAskTokenAllowance(app, eth);
   subscribeToStoreTransaction(app, eth);
   subscribeToPreferences(app, eth);
-  subscribeToGasService(app);
+  // subscribeToGasService(app);
   subscribeToRepl(app, eth, configFiles, configAbiFiles, connectedWalletPorts.showAccount);
-  subscribeToAdminDashboard(app, eth);
-  subscribeToGovernancePorts(app, eth);
+  // subscribeToAdminDashboard(app, eth);
+  // subscribeToGovernancePorts(app, eth);
   subscribeToFlywheelPorts(app, eth);
 
   // TODO: Do we want to reduce the globalness of these vars?

@@ -8,11 +8,11 @@
   },
   "DATA_PROVIDERS": {
     "development": "http://localhost:8545",
-    "goerli": "https://infura.io/goerli",
-    "rinkeby": "https://infura.io/rinkeby",
-    "kovan": "https://infura.io/kovan",
-    "ropsten": "https://infura.io/ropsten",
-    "mainnet": "https://infura.io/mainnet"
+    "goerli": "https://goerli.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
+    "rinkeby": "https://rinkeby.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
+    "kovan": "https://kovan.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
+    "ropsten": "https://ropsten.infura.io/v3/b393cb38acc149c6bc47c95d768f789b",
+    "mainnet": "https://speedy-nodes-nyc.moralis.io/595e032ef29eee61c739225a/eth/mainnet"
   },
   "NETWORK_MAP": {
     "mainnet": 1,
@@ -22,5 +22,12 @@
     "kovan": 42
   },
   "DEFAULT_NETWORK": "mainnet",
-  "BLOCKNATIVE_API_KEY": null
+  "BLOCKNATIVE_API_KEY": "86ca7540-ee00-4b6d-8ca8-45e6deb0d719"
 }
+
+
+
+
+
+
+curl https://speedy-nodes-nyc.moralis.io/595e032ef29eee61c739225a/eth/mainnet -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params": [],"id":1}'

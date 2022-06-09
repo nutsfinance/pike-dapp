@@ -74,12 +74,12 @@ mint config network customerAddress cTokenAddress underlyingAmountWei bnState =
         dataResult =
             FunctionSpec.encodeCall
                 "mint"
-                (if cTokenAddress == config.cEtherToken.address then
-                    []
+                -- (if cTokenAddress == config.cEtherToken.address then
+                --     []
 
-                 else
+                --  else
                     [ Value.UInt 256 underlyingAmountWei ]
-                )
+                -- )
 
         ownerAddressResult =
             FromEthereumUtils.customerAddressToEtherAddress customerAddress
@@ -99,10 +99,10 @@ mint config network customerAddress cTokenAddress underlyingAmountWei bnState =
                             BNTransaction.newTransaction network fromAddress toAddress "mint" [ amountString ] bnState
 
                         web3TransactionFunc =
-                            if cTokenAddress == config.cEtherToken.address then
-                                EtherWeb3.sendTransactionWithValue underlyingAmountWei
+                            -- if cTokenAddress == config.cEtherToken.address then
+                            --     EtherWeb3.sendTransactionWithValue underlyingAmountWei
 
-                            else
+                            -- else
                                 EtherWeb3.sendTransaction
                     in
                     ( Just bnTransaction

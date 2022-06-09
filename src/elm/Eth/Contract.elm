@@ -35,7 +35,7 @@ contractList maybeNetworkConfig =
                                 |> List.filterMap identity
                     in
                     [ ( "Comptroller", getContractAddressString config.comptroller )
-                    , ( "PriceOracle", getContractAddressString config.priceOracle )
+                    -- , ( "PriceOracle", getContractAddressString config.priceOracle )
                     ]
                         ++ (config.cTokens
                                 |> Dict.toList
