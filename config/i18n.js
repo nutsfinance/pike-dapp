@@ -71,7 +71,7 @@ function allMatches(regex, str) {
 }
 
 async function buildTranslations(mod, englishOnlyLangFile, translations, source, languages) {
-  console.log("saveTranslations", translationsPath, source, languages)
+  console.log("saveTranslations", translations, source, languages)
 
   const allLanguages = [source].concat(languages);
   console.log("allLanguages", allLanguages)
@@ -167,7 +167,7 @@ async function buildTranslations(mod, englishOnlyLangFile, translations, source,
 }
 
 async function saveTranslations(mod, translations, source, languages, outputFile) {
-  console.log("saveTranslations", translationsPath, sourceLang, languages)
+  console.log("saveTranslations", translations, sourceLang, languages)
 
   const output = await buildTranslations(mod, translations, source, languages);
 
